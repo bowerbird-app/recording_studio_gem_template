@@ -34,7 +34,6 @@
 
     <% card.body do %>
       <p><strong>Email:</strong> <%= current_user.email %></p>
-      <p><strong>Signed in at:</strong> <%= current_user.current_sign_in_at&.strftime("%B %d, %Y %H:%M") || "N/A" %></p>
     <% end %>
 
     <% card.footer do %>
