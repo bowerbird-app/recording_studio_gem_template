@@ -1,4 +1,6 @@
 Rails.application.routes.draw do
+  devise_for :users
+  mount RecordingStudio::Engine, at: "/recording_studio"
   # Mount the GemTemplate engine
   mount GemTemplate::Engine, at: "/gem_template"
 
@@ -13,5 +15,5 @@ Rails.application.routes.draw do
   # get "service-worker" => "rails/pwa#service_worker", as: :pwa_service_worker
 
   # Defines the root path route ("/")
-  root to: redirect("/gem_template")
+  root "home#index"
 end

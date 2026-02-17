@@ -1,0 +1,49 @@
+<div class="container mx-auto px-4 py-8">
+  <%= render FlatPack::Breadcrumb::Component.new do |breadcrumb| %>
+    <% breadcrumb.item(text: "Home", href: root_path) %>
+    <% breadcrumb.item(text: "Dashboard") %>
+  <% end %>
+
+  <h1 class="text-2xl font-bold mt-4 mb-6">Dashboard</h1>
+
+  <%= render FlatPack::Card::Component.new(style: :elevated) do |card| %>
+    <% card.header do %>
+      <h3>Workspace</h3>
+    <% end %>
+
+    <% card.body do %>
+      <% if @workspace %>
+        <p><strong>Name:</strong> <%= @workspace.name %></p>
+        <% if @root_recording %>
+          <p><strong>Root Recording ID:</strong> <%= @root_recording.id %></p>
+          <%= render FlatPack::Badge::Component.new(text: "Active", style: :success) %>
+        <% end %>
+      <% else %>
+        <%= render FlatPack::Alert::Component.new(
+          text: "No workspace found. Run `bin/rails db:seed` to create one.",
+          style: :warning
+        ) %>
+      <% end %>
+    <% end %>
+  <% end %>
+
+  <%= render FlatPack::Card::Component.new(style: :outlined) do |card| %>
+    <% card.header do %>
+      <h3>Current User</h3>
+    <% end %>
+
+    <% card.body do %>
+      <p><strong>Email:</strong> <%= current_user.email %></p>
+      <p><strong>Signed in at:</strong> <%= current_user.current_sign_in_at&.strftime("%B %d, %Y %H:%M") || "N/A" %></p>
+    <% end %>
+
+    <% card.footer do %>
+      <%= render FlatPack::Button::Component.new(
+        text: "Sign Out",
+        style: :ghost,
+        href: destroy_user_session_path,
+        method: :delete
+      ) %>
+    <% end %>
+  <% end %>
+</div>
