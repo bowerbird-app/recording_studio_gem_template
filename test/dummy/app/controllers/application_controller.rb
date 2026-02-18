@@ -8,9 +8,20 @@ class ApplicationController < ActionController::Base
   before_action :authenticate_user!
   before_action :set_current_actor
 
+  # Use a different layout for Devise controllers
+  layout :layout_by_resource
+
   private
 
   def set_current_actor
     Current.actor = current_user
+  end
+
+  def layout_by_resource
+    if devise_controller?
+      "devise"
+    else
+      "application"
+    end
   end
 end
