@@ -23,9 +23,125 @@
     <%= javascript_importmap_tags %>
   </head>
 
-  <body>
-    <main class="container mx-auto mt-28 px-5 flex">
-      <%= yield %>
-    </main>
+  <body class="m-0 overflow-hidden">
+    <%# SVG Icon Sprite %>
+    <svg xmlns="http://www.w3.org/2000/svg" style="display: none;">
+      <symbol id="icon-home" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+        <path d="m3 9 9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/>
+        <polyline points="9 22 9 12 15 12 15 22"/>
+      </symbol>
+      <symbol id="icon-settings" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+        <path d="M12.22 2h-.44a2 2 0 0 0-2 2v.18a2 2 0 0 1-1 1.73l-.43.25a2 2 0 0 1-2 0l-.15-.08a2 2 0 0 0-2.73.73l-.22.38a2 2 0 0 0 .73 2.73l.15.1a2 2 0 0 1 1 1.72v.51a2 2 0 0 1-1 1.74l-.15.09a2 2 0 0 0-.73 2.73l.22.38a2 2 0 0 0 2.73.73l.15-.08a2 2 0 0 1 2 0l.43.25a2 2 0 0 1 1 1.73V20a2 2 0 0 0 2 2h.44a2 2 0 0 0 2-2v-.18a2 2 0 0 1 1-1.73l.43-.25a2 2 0 0 1 2 0l.15.08a2 2 0 0 0 2.73-.73l.22-.39a2 2 0 0 0-.73-2.73l-.15-.08a2 2 0 0 1-1-1.74v-.5a2 2 0 0 1 1-1.74l.15-.09a2 2 0 0 0 .73-2.73l-.22-.38a2 2 0 0 0-2.73-.73l-.15.08a2 2 0 0 1-2 0l-.43-.25a2 2 0 0 1-1-1.73V4a2 2 0 0 0-2-2z"/>
+        <circle cx="12" cy="12" r="3"/>
+      </symbol>
+      <symbol id="icon-menu" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+        <line x1="4" x2="20" y1="12" y2="12"/>
+        <line x1="4" x2="20" y1="6" y2="6"/>
+        <line x1="4" x2="20" y1="18" y2="18"/>
+      </symbol>
+      <symbol id="icon-user" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+        <path d="M19 21v-2a4 4 0 0 0-4-4H9a4 4 0 0 0-4 4v2"/>
+        <circle cx="12" cy="7" r="4"/>
+      </symbol>
+      <symbol id="icon-search" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+        <circle cx="11" cy="11" r="8"/>
+        <path d="m21 21-4.3-4.3"/>
+      </symbol>
+      <symbol id="icon-dashboard" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+        <rect width="7" height="9" x="3" y="3" rx="1"/>
+        <rect width="7" height="5" x="14" y="3" rx="1"/>
+        <rect width="7" height="9" x="14" y="12" rx="1"/>
+        <rect width="7" height="5" x="3" y="16" rx="1"/>
+      </symbol>
+      <symbol id="icon-chevron-right" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+        <path d="m9 18 6-6-6-6"/>
+      </symbol>
+      <symbol id="icon-bell" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+        <path d="M6 8a6 6 0 0 1 12 0c0 7 3 9 3 9H3s3-2 3-9"/>
+        <path d="M10.3 21a1.94 1.94 0 0 0 3.4 0"/>
+      </symbol>
+      <symbol id="icon-plus" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+        <path d="M5 12h14"/>
+        <path d="M12 5v14"/>
+      </symbol>
+    </svg>
+
+    <%= render FlatPack::SidebarLayout::Component.new(
+      side: :left,
+      storage_key: "recording-studio-template-shell"
+    ) do |layout| %>
+
+      <%# === SIDEBAR SLOT === %>
+      <% layout.sidebar do %>
+        <%= render FlatPack::Sidebar::Component.new(side: :left) do |sidebar| %>
+          <% sidebar.header do %>
+            <%= render FlatPack::Sidebar::Header::Component.new(
+              brand_abbr: "RS",
+              title: "Recording Studio",
+              subtitle: "Template"
+            ) %>
+          <% end %>
+
+          <% sidebar.items do %>
+            <nav class="py-4 space-y-1" aria-label="Main navigation">
+              <%= render FlatPack::Sidebar::Item::Component.new(
+                label: "Dashboard",
+                href: root_path,
+                icon: :home,
+                active: current_page?(root_path)
+              ) %>
+              <%# Add more sidebar items here as your app grows %>
+            </nav>
+          <% end %>
+        <% end %>
+      <% end %>
+
+      <%# === TOP NAV SLOT === %>
+      <% layout.top_nav do %>
+        <%= render FlatPack::TopNav::Component.new do |nav| %>
+          <% nav.left do %>
+            <button
+              type="button"
+              class="md:hidden p-2 rounded-lg hover:bg-[var(--color-muted)] transition-colors"
+              data-flat-pack--sidebar-layout-target="mobileToggle"
+              data-action="click->flat-pack--sidebar-layout#toggleMobile"
+              aria-label="Toggle sidebar"
+            >
+              <%= render FlatPack::Shared::IconComponent.new(name: :menu, size: :md) %>
+            </button>
+          <% end %>
+
+          <% nav.right do %>
+            <% if current_user %>
+              <span class="text-sm text-[var(--color-text-muted)]"><%= current_user.email %></span>
+              <%= button_to "Sign Out", destroy_user_session_path,
+                method: :delete,
+                class: "text-sm text-[var(--color-text-muted)] hover:text-[var(--color-text)] transition-colors" %>
+            <% end %>
+          <% end %>
+        <% end %>
+      <% end %>
+
+      <%# === MAIN CONTENT SLOT === %>
+      <% layout.main do %>
+        <main class="flex-1 min-h-0 overflow-y-auto overscroll-contain p-8">
+          <div class="max-w-4xl mx-auto">
+            <% if notice.present? %>
+              <div class="mb-4 rounded-lg border border-[var(--color-border)] bg-[var(--color-muted)] px-4 py-3 text-sm">
+                <%= notice %>
+              </div>
+            <% end %>
+
+            <% if alert.present? %>
+              <div class="mb-4 rounded-lg border border-red-300 bg-red-50 px-4 py-3 text-sm text-red-800">
+                <%= alert %>
+              </div>
+            <% end %>
+
+            <%= yield %>
+          </div>
+        </main>
+      <% end %>
+    <% end %>
   </body>
 </html>
