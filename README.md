@@ -1,9 +1,94 @@
 # GemTemplate
 
-This repository is a template for building Rails mountable engine gems.
+Gem template with RecordingStudio already setup. Use for extending RecordingStudio.
 
-For instructions on how to use, configure, and rename this template, please see the [Gem Template README](docs/gem_template/GEM_TEMPLATE_README.md).
+## What's Included
 
-## Important: After Renaming
+- **RecordingStudio** gem installed and configured
+- **Devise** authentication with a pre-seeded admin user
+- **Workspace** root recording set up following RecordingStudio's Quick Start pattern
+- **FlatPack** UI component library for all views
+- **Dummy app** (`test/dummy/`) with a working login screen and dashboard
 
-When you rename this gem using `bin/rename_gem`, the documentation in `docs/gem_template/` is intentionally **preserved** as architectural reference material. These files remain unchanged to document the original template structure and serve as a reference for the patterns used in this gem.
+## Quick Start
+
+### GitHub Codespaces (Recommended)
+
+1. Click **Code** → **Codespaces** → **Create codespace**
+2. Wait for setup to complete
+3. Run:
+   ```bash
+   cd test/dummy
+   bin/rails db:setup
+   bin/dev
+   ```
+4. Open port 3000 — you'll see the login screen
+
+### Login Credentials
+
+| Field    | Value             |
+|----------|-------------------|
+| Email    | admin@admin.com   |
+| Password | Password          |
+
+The login form is prefilled with these credentials for fast access.
+
+## Architecture
+
+### Root Recording Pattern
+
+This template follows RecordingStudio's root recording pattern:
+
+- **Workspace** is the top-level recordable
+- A root `RecordingStudio::Recording` wraps the Workspace
+- The admin user has root-level admin access via `RecordingStudio::Access`
+- `Current.actor` is set from `current_user` (Devise) in `ApplicationController`
+
+### Extending RecordingStudio
+
+To add new recordable types:
+
+1. Create your model (e.g., `Page`, `Comment`)
+2. Register it in `config/initializers/recording_studio.rb`:
+   ```ruby
+   RecordingStudio.configure do |config|
+     config.recordable_types = ["Workspace", "YourNewType"]
+   end
+   ```
+3. Create recordings under the root:
+   ```ruby
+   root_recording.record(YourNewType) do |record|
+     record.title = "Example"
+   end
+   ```
+
+### FlatPack UI Components
+
+All views use FlatPack ViewComponents. Available components include:
+
+- `FlatPack::Button::Component` — Buttons (`:primary`, `:secondary`, `:ghost`)
+- `FlatPack::Card::Component` — Cards (`:default`, `:elevated`, `:outlined`)
+- `FlatPack::Alert::Component` — Alerts (`:success`, `:error`, `:warning`, `:info`)
+- `FlatPack::Badge::Component` — Status badges
+- `FlatPack::Table::Component` — Data tables
+- `FlatPack::TextInput::Component`, `EmailInput`, `PasswordInput` — Form inputs
+- `FlatPack::Breadcrumb::Component` — Navigation breadcrumbs
+- `FlatPack::Navbar::Component` — Navigation sidebar
+
+See the [FlatPack README](https://github.com/bowerbird-app/flatpack) for full documentation.
+
+## Tech Stack
+
+| Component       | Version |
+|-----------------|---------|
+| Ruby            | 3.3+    |
+| Rails           | 8.1+    |
+| PostgreSQL      | 16      |
+| TailwindCSS     | 4       |
+| RecordingStudio | latest  |
+| FlatPack        | latest  |
+| Devise          | latest  |
+
+## Documentation
+
+The original gem template documentation is preserved in `docs/gem_template/` as architectural reference material.
